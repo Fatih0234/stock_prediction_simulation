@@ -18,6 +18,36 @@ warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
 
 
+def prepare_data(ticker, start_date, end_date):
+    # Download the data
+    df = yf.Ticker(ticker)
+    df = df.history(start=start_date, end=end_date)
+    df.reset_index(inplace=True)
+
+    # Convert the datetime to a date only object
+    df["Date"] = df["Date"].dt.date
+    df["Date"] = pd.to_datetime(df["Date"])
+
+    # Load and merge macroeconomic data
+    macro_econ = pd.read_csv(os.path.join("datasets", 'macroeconomics_data.csv'))
+    macro_econ["Date"] = pd.to_datetime(macro_econ["Date"])
+    df = df.merge(macro_econ, on="Date", how="left")
+
+    # Drop unnecessary columns
+    df.drop(columns=['Dividends', 'Stock Splits'], inplace=True)
+
+    # Create target variable
+    df["tomorrow"] = df["Close"].shift(-1)
+    df["target"] = (df["tomorrow"] > df["Close"]).astype(int)
+
+    # Lower case all the column names
+    df.columns = [col.lower() for col in df.columns]
+
+    # Set 'date' as the index
+    df.set_index('date', inplace=True)
+
+    return df
+
 # Function to perform simplified feature engineering
 def generate_features(data):
     data = data.copy()
@@ -82,35 +112,6 @@ def generate_features(data):
 
     return data.dropna()
 
-def prepare_data(ticker, start_date, end_date):
-    # Download the data
-    df = yf.Ticker(ticker)
-    df = df.history(start=start_date, end=end_date)
-    df.reset_index(inplace=True)
-
-    # Convert the datetime to a date only object
-    df["Date"] = df["Date"].dt.date
-    df["Date"] = pd.to_datetime(df["Date"])
-
-    # Load and merge macroeconomic data
-    macro_econ = pd.read_csv(os.path.join("datasets", 'macroeconomics_data.csv'))
-    macro_econ["Date"] = pd.to_datetime(macro_econ["Date"])
-    df = df.merge(macro_econ, on="Date", how="left")
-
-    # Drop unnecessary columns
-    df.drop(columns=['Dividends', 'Stock Splits'], inplace=True)
-
-    # Create target variable
-    df["tomorrow"] = df["Close"].shift(-1)
-    df["target"] = (df["tomorrow"] > df["Close"]).astype(int)
-
-    # Lower case all the column names
-    df.columns = [col.lower() for col in df.columns]
-
-    # Set 'date' as the index
-    df.set_index('date', inplace=True)
-
-    return df
 
 def predict(train, test, predictors, model):
     model.fit(train[predictors], train["target"])
@@ -153,9 +154,9 @@ def run_simulation(data, amt, verbose=False, plot=True):
        'close_ratio_1000', 'inflation_rate_change', 'lag_inflation_rate_1']
     target = 'target'  # You need to define this column in your data
   
-    # Prepare the features and target for the classifier
-    X = data[predictors].iloc[:-1]
-    y = data[target].shift(-1).iloc[:-1]    
+  # Prepare the features and target for the classifier
+    X = data[predictors]
+    y = data[target] 
 
     # Train the classifier
     model = RandomForestClassifier(n_estimators=100, min_samples_split=50, random_state=1)

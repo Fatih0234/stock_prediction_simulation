@@ -34,7 +34,7 @@ tickerSymbol = st.sidebar.selectbox('Stock ticker', ticker_list) # Select ticker
 # get data on this ticker
 data = prepare_data(tickerSymbol, "2010-01-01", "2023-10-01")
 data = generate_features(data)
-data
+data.sort_index()
 
 
 
