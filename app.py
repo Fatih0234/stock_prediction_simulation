@@ -9,7 +9,7 @@ from simulation_app import prepare_data, predict, backtest, run_simulation, gene
 st.markdown('''
 # Stock Direction Forecast App
 Shown are the forecast of stock direction either up or down for the period 2023-01-01 till 2023-10-01.
-You can select the ticker of your choice in the sidebar.
+You can select the ticker of your choice in the sidebar.(Companies are technology companies from S&P 500)
 Some of the companies don't have extensive data, so the app might not work for all of them.
 However companies who have data for the period 2010-01-01 till 2023-10-01 will work.
 
@@ -28,16 +28,13 @@ st.sidebar.subheader('Query parameters')
 money = st.sidebar.number_input("Money", value=1000, step=100)
 
 # Retrieving tickers data
-ticker_list = pd.read_csv("datasets/sp500_companies.csv")
+ticker_list = pd.read_csv("datasets/sp500_companies.txt")
 tickerSymbol = st.sidebar.selectbox('Stock ticker', ticker_list) # Select ticker symbol
 
 # get data on this ticker
 data = prepare_data(tickerSymbol, "2010-01-01", "2023-10-01")
 data = generate_features(data)
 data
-
-
-
 
 
 
