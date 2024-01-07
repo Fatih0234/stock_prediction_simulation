@@ -28,7 +28,7 @@ st.sidebar.subheader('Query parameters')
 money = st.sidebar.number_input("Money", value=1000, step=100)
 
 # Retrieving tickers data
-ticker_list = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/s-and-p-500-companies/master/data/constituents_symbols.txt')
+ticker_list = pd.read_csv("datasets/sp500_companies.csv")
 tickerSymbol = st.sidebar.selectbox('Stock ticker', ticker_list) # Select ticker symbol
 
 # get data on this ticker

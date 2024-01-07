@@ -172,6 +172,10 @@ def run_simulation(data, amt, verbose=False, plot=True):
     st.write(predictors)
     st.markdown("### Model Target")
     st.write("Direction of the next day's price movement (1 = up, 0 = down)")
+    st.write("---")
+    # let's warn the user here for a possible error
+    st.markdown("### Warning")
+    st.markdown("If you are seeing an possible eror here at this point , that's because the company doesn't have enough data to run the simulation. Please try another company.")
     
 
     # Backtest the model
