@@ -6,7 +6,7 @@
 <p align="left">
 In this project, I am predicting stock prices with ML model, RandomForestClassifier. <br>
 Website link => https://stockpredictionsimulation-n4websmznynvcymmq72ma3.streamlit.app/ <br>
-Explanation Youtube video => https://www.youtube.com/watch?v=vCDp_8acECI
+I explain the project and walk you through the code section. => https://www.youtube.com/watch?v=vCDp_8acECI
 </p>
 
 - 🌱 I’m currently learning **ML Algorithms.**
